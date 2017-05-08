@@ -1,6 +1,7 @@
-define(["getAllNodes"],function(getAllNodes){
+define(["getAllNodes","getNodesToPass"],function(getAllNodes,getNodesToPass){
 	return function(rawNode, f, thisObject){
-		var nodesToPass = [], allNodes = getAllNodes(rawNode);
-
+		var allNodes = getAllNodes(rawNode),
+			nodesToPass = getNodesToPass(allNodes);
+		return f.apply(thisObject, nodesToPass);
 	};
 });
