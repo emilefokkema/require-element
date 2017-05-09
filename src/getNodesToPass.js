@@ -1,4 +1,4 @@
-define([],function(){
+define(["appendFromThingsToNode"],function(appendFromThingsToNode){
 	var getNamedNode = function(node){
 		var attr = node.getAttribute('id');
 		if(!attr){return null;}
@@ -70,12 +70,15 @@ define([],function(){
 		return result2;
 	};
 
-	return function(nodes){
+	return function(nodes, thisObject){
 		var namedNodes = [];
 		for(var i=0;i<nodes.length;i++){
 			var namedNode = getNamedNode(nodes[i]);
 			if(namedNode){
 				namedNodes.push(namedNode);
+			}
+			if(thisObject){
+				appendFromThingsToNode(nodes[i], thisObject);
 			}
 		}
 		var grouped = groupNamedNodesById(namedNodes)

@@ -53,5 +53,19 @@ require(["testSet","require-element"],function(testSet){
 			var html = div.innerHTML;
 			this.assert(html == "something", "expected div to say 'something'");
 		});
+
+		test("testOffspringArray",function(){
+			var div = requireElement("<div>$(name)</div>",function(){}, {name:["one","two"]});
+
+			var html = div.innerHTML;
+			this.assert(html == "onetwo", "expected div to say 'onetwo'");
+		});
+
+		test("testOffspringAttribute",function(){
+			var div = requireElement("<div offspring=\"$(name)\"></div>",function(){}, {name:"something"});
+
+			var html = div.innerHTML;
+			this.assert(html == "something", "expected div to say 'something'");
+		});
 	});
 });
