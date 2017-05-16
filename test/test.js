@@ -67,5 +67,12 @@ require(["testSet","require-element"],function(testSet){
 			var html = div.innerHTML;
 			this.assert(html == "something", "expected div to say 'something'");
 		});
+
+		test("testFromTemplate",function(){
+			var self = this;
+			requireElement(document.getElementById("settings").innerHTML,function(div, number, button){
+				self.assert(div != null, "div was null");
+			});
+		});
 	});
 });
