@@ -1,4 +1,4 @@
-define(["makeRawNode","nodeGrouping", "makeArgumentsArray"],function(makeRawNode,nodeGrouping,makeArgumentsArray){
+define(["nodeGrouping", "makeArgumentsArray"],function(nodeGrouping,makeArgumentsArray){
 	
 	var requireElement = function(){
 		var thisObject = arguments[2];
@@ -6,20 +6,19 @@ define(["makeRawNode","nodeGrouping", "makeArgumentsArray"],function(makeRawNode
 		if(arguments[0] instanceof nodeGrouping){
 			grouping = arguments[0];
 		}else if(typeof arguments[0] === "string"){
-			var rawNode = makeRawNode(arguments[0]);
-			grouping = new nodeGrouping(rawNode, thisObject);
+			grouping = new nodeGrouping(arguments[0], thisObject);
 		}
 		
 		var f;
 		if(arguments.length <= 1 || typeof (f = arguments[1]) != "function"){
-			return rawNode;
+			return grouping.rawNode;
 		}
 		var toReturn;
 		toReturn = f.apply(thisObject, makeArgumentsArray(grouping.groups));
 		if(toReturn){
 			return toReturn;
 		}
-		return rawNode;
+		return grouping.rawNode;
 	};
 
 	window.requireElement = requireElement;
