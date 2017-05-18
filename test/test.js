@@ -77,13 +77,15 @@ require(["testSet","require-element"],function(testSet){
 
 		test("testWithInnerTemplate",function(){
 			var self = this;
-			requireElement("<div id=\"1\"><ul><li id=\"1\" template-id=\"2\"><a id=\"2\"></a></li></ul></div>",function(div, li){
+			requireElement("<div id=\"1\"><ul><li id=\"1\" template-id=\"2\"><a id=\"2\">$(name)</a></li></ul></div>",function(div, li){
 				self.assert(div.outerHTML == "<div><ul></ul></div>");
 
-				var item = requireElement(li(), function(li, a){
+				var item = li(function(li, a){
 					self.assert(li, "there was no li");
 					self.assert(a, "there was no a");
-				});
+				},{name:"li"});
+
+				self.assert(div.outerHTML == "<div><ul><li><a>li</a></li></ul></div>");
 
 				
 			});
