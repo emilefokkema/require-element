@@ -1,4 +1,4 @@
-define(["makeRawNode", "appendFromThingsToNode","getAllNodes"],function(makeRawNode, appendFromThingsToNode,getAllNodes){
+define(["makeRawNode", "appendFromThingsToNode","getAllNodes","getArgs","useArgsAndGrouping"],function(makeRawNode, appendFromThingsToNode,getAllNodes,getArgs,useArgsAndGrouping){
 	var getNamedNode = function(node){
 		var attr = node.getAttribute('id');
 		if(!attr){return null;}
@@ -28,8 +28,10 @@ define(["makeRawNode", "appendFromThingsToNode","getAllNodes"],function(makeRawN
 		return {
 			id:id,
 			node:function(){
-				console.log(templateNode.outerHTML);
-				throw new Error("not implemented!");
+				var args = getArgs(arguments);
+				var grouping = new nodeGrouping(templateNode.outerHTML, args.thisObject);
+				parentNode.appendChild(grouping.rawNode);
+				return useArgsAndGrouping(args, grouping);
 			}
 		};
 	};
@@ -93,9 +95,10 @@ define(["makeRawNode", "appendFromThingsToNode","getAllNodes"],function(makeRawN
 		return namedNodes;
 	};
 
-	return function(html, thisObject){
+	var nodeGrouping = function(html, thisObject){
 		var rawNode = makeRawNode(html);
 		this.groups = groupNamedNodesById(getNamedNodes(rawNode, thisObject));
 		this.rawNode = rawNode;
 	};
+	return nodeGrouping;
 });
