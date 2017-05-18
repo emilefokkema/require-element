@@ -74,5 +74,16 @@ require(["testSet","require-element"],function(testSet){
 				self.assert(div != null, "div was null");
 			});
 		});
+
+		test("testWithInnerTemplate",function(){
+			var self = this;
+			requireElement("<div><ul><li id=\"1\" template=\"item\"></li></ul></div>",function(){
+				var item = requireElement(this.template("item"), function(li){
+					return {tag:li};
+				});
+
+				self.assert(item.tag.tagName == "LI", "no <li> was created");
+			});
+		});
 	});
 });
