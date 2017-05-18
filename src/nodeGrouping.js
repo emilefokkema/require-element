@@ -1,4 +1,4 @@
-define(["appendFromThingsToNode"],function(appendFromThingsToNode){
+define(["appendFromThingsToNode","getAllNodes"],function(appendFromThingsToNode,getAllNodes){
 	var getNamedNode = function(node){
 		var attr = node.getAttribute('id');
 		if(!attr){return null;}
@@ -52,9 +52,8 @@ define(["appendFromThingsToNode"],function(appendFromThingsToNode){
 		return result;
 	};
 
-	
-
-	return function(nodes, thisObject){
+	var getNamedNodes = function(rawNode, thisObject){
+		var nodes = getAllNodes(rawNode);
 		var namedNodes = [];
 		for(var i=0;i<nodes.length;i++){
 			var namedNode = getNamedNode(nodes[i]);
@@ -65,7 +64,12 @@ define(["appendFromThingsToNode"],function(appendFromThingsToNode){
 				appendFromThingsToNode(nodes[i], thisObject);
 			}
 		}
-		var grouped = groupNamedNodesById(namedNodes)
-		return grouped;
+		return namedNodes;
+	};
+
+	return function(rawNode, thisObject){
+		
+		this.groups = groupNamedNodesById(getNamedNodes(rawNode, thisObject));
+
 	};
 });
