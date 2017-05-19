@@ -54,6 +54,12 @@ require(["testSet","require-element"],function(testSet){
 			this.assert(html == "something", "expected div to say 'something'");
 		});
 
+		test("testAttributes",function(){
+			var button = requireElement("<input type=\"button\" value=\"$(name)\">",{name:"hoi"});
+
+			this.assert(button.getAttribute('value') == "hoi", "button's value wasn't set correctly");
+		});
+
 		test("testOffspringArray",function(){
 			var div = requireElement("<div>$(name)</div>",function(){}, {name:["one","two"]});
 
