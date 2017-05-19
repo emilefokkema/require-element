@@ -54,6 +54,12 @@ require(["testSet","require-element"],function(testSet){
 			this.assert(html == "something", "expected div to say 'something'");
 		});
 
+		test("testAttributes",function(){
+			var button = requireElement("<input type=\"button\" value=\"$(name)\">",{name:"hoi"});
+
+			this.assert(button.getAttribute('value') == "hoi", "button's value wasn't set correctly");
+		});
+
 		test("testOffspringArray",function(){
 			var div = requireElement("<div>$(name)</div>",function(){}, {name:["one","two"]});
 
@@ -72,6 +78,22 @@ require(["testSet","require-element"],function(testSet){
 			var self = this;
 			requireElement(document.getElementById("settings").innerHTML,function(div, number, button){
 				self.assert(div != null, "div was null");
+			});
+		});
+
+		test("testWithInnerTemplate",function(){
+			var self = this;
+			requireElement("<div id=\"1\"><ul><li id=\"1\" template-id=\"2\"><a id=\"2\">$(name)</a></li></ul></div>",function(div, li){
+				self.assert(div.outerHTML == "<div><ul></ul></div>");
+
+				var item = li(function(li, a){
+					self.assert(li, "there was no li");
+					self.assert(a, "there was no a");
+				},{name:"li"});
+
+				self.assert(div.outerHTML == "<div><ul><li><a>li</a></li></ul></div>");
+
+				
 			});
 		});
 	});

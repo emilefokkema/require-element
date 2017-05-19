@@ -1,4 +1,4 @@
-define(["appendFromThingsToNode"],function(appendFromThingsToNode){
+define(["makeRawNode", "appendFromThingsToNode","getAllNodes","getArgs","useArgsAndGrouping"],function(makeRawNode, appendFromThingsToNode,getAllNodes,getArgs,useArgsAndGrouping){
 	var getNamedNode = function(node){
 		var attr = node.getAttribute('id');
 		if(!attr){return null;}
@@ -12,6 +12,27 @@ define(["appendFromThingsToNode"],function(appendFromThingsToNode){
 		return {
 			node:node,
 			id:id
+		};
+	};
+
+	var getNamedTemplateNode = function(templateNode){
+		var parentNode = templateNode.parentNode;
+		parentNode.removeChild(templateNode);
+		var idAttr = templateNode.getAttribute('template-id');
+		var match = idAttr.match(/^\d+$/);
+		if(!match){
+			throw new Error("just an integer as template-id please");
+		}
+		templateNode.removeAttribute('template-id');
+		var id = match[0];
+		return {
+			id:id,
+			node:function(){
+				var args = getArgs(arguments);
+				var grouping = new nodeGrouping(templateNode.outerHTML, args.thisObject);
+				parentNode.appendChild(grouping.rawNode);
+				return useArgsAndGrouping(args, grouping);
+			}
 		};
 	};
 
@@ -52,25 +73,12 @@ define(["appendFromThingsToNode"],function(appendFromThingsToNode){
 		return result;
 	};
 
-	var makeArgumentsArray = function(groupedNodes){
-		var result = [];
-
-		for(var id in groupedNodes){
-			if(groupedNodes.hasOwnProperty(id)){
-				var group = groupedNodes[id];
-				result[id] = ((typeof jQuery == "function" && group instanceof jQuery) || group.length > 1) ? group : group[0];
-			}
-		}
-		var result2 = [];
-		for(var id in result){
-			if(result.hasOwnProperty(id)){
-				result2.push(result[id]);
-			}
-		}
-		return result2;
-	};
-
-	return function(nodes, thisObject){
+	var getNamedNodes = function(rawNode, thisObject){
+		var templateNodes = [];
+		var nodes = getAllNodes(
+			rawNode,
+			function(node){return node.getAttribute('template-id') == null;},
+			function(templateNode){templateNodes.push(templateNode);});
 		var namedNodes = [];
 		for(var i=0;i<nodes.length;i++){
 			var namedNode = getNamedNode(nodes[i]);
@@ -81,7 +89,16 @@ define(["appendFromThingsToNode"],function(appendFromThingsToNode){
 				appendFromThingsToNode(nodes[i], thisObject);
 			}
 		}
-		var grouped = groupNamedNodesById(namedNodes)
-		return makeArgumentsArray(grouped);
+		for(var i=0;i<templateNodes.length;i++){
+			namedNodes.push(getNamedTemplateNode(templateNodes[i]));
+		}
+		return namedNodes;
 	};
+
+	var nodeGrouping = function(html, thisObject){
+		var rawNode = makeRawNode(html);
+		this.groups = groupNamedNodesById(getNamedNodes(rawNode, thisObject));
+		this.rawNode = rawNode;
+	};
+	return nodeGrouping;
 });

@@ -30,18 +30,19 @@ define([],function(){
 			}
 		});
 	};
-
+	var rgx = /\$\(([^\s()\-\.]+)\)/g;
+	var extract=function(text){
+		var match,result=[];
+		
+		while(match=rgx.exec(text)){
+			result.push(match[1]);
+		}
+		if(result.length==0){return null;}
+		return result;
+	};
 	var getOffspringIdentifiers=function(node){
 		var rgx;
-		var extract=function(text){
-			var match,result=[];
-			rgx=new RegExp("\\$\\(([^\\s()\\-.]+)\\)","g");
-			while(match=rgx.exec(text)){
-				result.push(match[1]);
-			}
-			if(result.length==0){return null;}
-			return result;
-		};
+		
 		if(node.childNodes.length==1&&node.childNodes[0].nodeName==='#text'&&(result=node.innerText||node.textContent)){
 			return extract(result);
 		}else if(result=node.getAttribute('offspring')){
@@ -50,11 +51,21 @@ define([],function(){
 		}
 		return null;
 	};
+	var replaceAttributes = function(node, things){
+		var attrs = node.attributes;
+		for(var i=0;i<attrs.length;i++){
+			attrs[i].value = attrs[i].value.replace(rgx, function(m, p1){
+				return ""+things[p1];
+			});
+
+		}
+	};
 
 	return function(node, things){
 		var offspringIds = getOffspringIdentifiers(node);
 		if(offspringIds){
 			append(node, offspringIds, things);
 		}
+		replaceAttributes(node, things);
 	};
 });
