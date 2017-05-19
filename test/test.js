@@ -97,4 +97,16 @@ require(["testSet","require-element"],function(testSet){
 			});
 		});
 	});
+
+	var list = requireElement(document.getElementById("toDoList").innerHTML,function(newItemElement, input, addButton){
+		addButton.addEventListener('click',function(){
+			newItemElement(function(doneButton, text){
+				doneButton.addEventListener('click',function(){
+					text.style.textDecoration = "line-through";
+				});
+			},{text:input.value});
+		});
+	});
+
+	document.body.appendChild(list);
 });
