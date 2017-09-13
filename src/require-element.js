@@ -5,7 +5,7 @@ define(["nodeGrouping", "useArgsAndGrouping", "getArgs"],function(nodeGrouping,u
 		
 		var grouping = new nodeGrouping(args.html, args.thisObject);
 
-		return useArgsAndGrouping(args, grouping);
+		return useArgsAndGrouping(args, grouping, null);
 	};
 
 	window.requireElement = requireElement;

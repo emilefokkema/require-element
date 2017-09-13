@@ -31,7 +31,14 @@ define(["makeRawNode", "appendFromThingsToNode","getAllNodes","getArgs","useArgs
 				var args = getArgs(arguments);
 				var grouping = new nodeGrouping(templateNode.outerHTML, args.thisObject);
 				parentNode.appendChild(grouping.rawNode);
-				return useArgsAndGrouping(args, grouping);
+				var removed = false;
+				var remove = function(){
+					if(!removed){
+					   	parentNode.removeChild(grouping.rawNode);
+						removed = true;
+					}
+				};
+				return useArgsAndGrouping(args, grouping, {remove:remove});
 			}
 		};
 	};

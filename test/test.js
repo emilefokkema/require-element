@@ -96,6 +96,26 @@ require(["testSet","require-element"],function(testSet){
 				
 			});
 		});
+		
+		test("testRemovingTemplate", function(){
+			var templateUser = requireElement("<div id=\"1\"><span template-id=\"2\"></span></div>",function(div, spanTemplate){
+				var span = spanTemplate(function(){
+					var self = this;
+					return {
+						remove:function(){self.remove();}
+					};
+				});
+				return {
+					div:div,
+					removeSpan:function(){span.remove();}
+				};
+			});
+			var html = templateUser.div.outerHTML;
+			this.assert(html === "<div><span></span></div>");
+			templateUser.removeSpan();
+			html = templateUser.div.outerHTML;
+			this.assert(html === "<div></div>", "the span wasn't removed");
+		});
 	});
 
 	var list = requireElement(document.getElementById("toDoList").innerHTML,function(newItemElement, input, addButton){
