@@ -116,9 +116,22 @@ require(["testSet","require-element"],function(testSet){
 			html = templateUser.div.outerHTML;
 			this.assert(html === "<div></div>", "the span wasn't removed");
 		});
+
+		test("testMountTemplate", function(){
+			var div = requireElement(document.getElementById("testMountTemplate"), function(div){
+				return {
+					node:div,
+					remove:this.remove
+				};
+			});
+			this.assert(!!div.node.parentElement, "div has no parent element");
+			div.remove();
+			this.assert(!div.node.parentElement, "div still has a parent element");
+
+		});
 	});
 
-	var list = requireElement(document.getElementById("toDoList").innerHTML,function(newItemElement, input, addButton){
+	var list = requireElement(document.getElementById("toDoList"),function(newItemElement, input, addButton){
 		addButton.addEventListener('click',function(){
 			newItemElement(function(doneButton, text){
 				doneButton.addEventListener('click',function(){
@@ -127,6 +140,4 @@ require(["testSet","require-element"],function(testSet){
 			},{text:input.value});
 		});
 	});
-
-	document.body.appendChild(list);
 });

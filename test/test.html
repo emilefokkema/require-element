@@ -1,20 +1,27 @@
 <html>
-<script type="text/template" id="settings">
-	<div id="1" class="input settings">
-		time per step: 2 ^
-		<input id="2" type="number" min="0" step="1"/>
-		<input id="3" type="button" value="Save"/>
+<head></head>
+<body>
+	<div id="testMount">
+		<script type="text/template" id="testMountTemplate">
+			<div id="1"></div>
+		</script>
 	</div>
-</script>
-<script type="text/template" id="toDoList">
-	<div>
-		<h3>To do</h3>
-		<div>
-			<div template-id="1"><a id="2">$(text)</a><input id="1" type="button" value="done"></div>
+	<script type="text/template" id="settings">
+		<div id="1" class="input settings">
+			time per step: 2 ^
+			<input id="2" type="number" min="0" step="1"/>
+			<input id="3" type="button" value="Save"/>
 		</div>
-		<div><input id="2" type="text"/><input id="3" type="button" value="add"/></div>
-	</div>
-</script>
-<script data-main="test" src="../node_modules/requirejs/require.js"></script>
-
+	</script>
+	<script type="text/template" id="toDoList">
+		<div>
+			<h3>To do</h3>
+			<div>
+				<div template-id="1"><a id="2">$(text)</a><input id="1" type="button" value="done"></div>
+			</div>
+			<div><input id="2" type="text"/><input id="3" type="button" value="add"/></div>
+		</div>
+	</script>
+	<script data-main="test" src="../node_modules/requirejs/require.js"></script>
+</body>
 </html>

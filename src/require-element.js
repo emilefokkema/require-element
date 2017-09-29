@@ -4,8 +4,12 @@ define(["nodeGrouping", "useArgsAndGrouping", "getArgs"],function(nodeGrouping,u
 		var args = getArgs(arguments);
 		
 		var grouping = new nodeGrouping(args.html, args.thisObject);
+		var thisObj = null;
+		if(grouping.remove){
+			thisObj = {remove:grouping.remove};
+		};
 
-		return useArgsAndGrouping(args, grouping, null);
+		return useArgsAndGrouping(args, grouping, thisObj);
 	};
 
 	window.requireElement = requireElement;

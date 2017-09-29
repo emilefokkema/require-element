@@ -1,4 +1,4 @@
-define(["makeRawNode", "appendFromThingsToNode","getAllNodes","getArgs","useArgsAndGrouping"],function(makeRawNode, appendFromThingsToNode,getAllNodes,getArgs,useArgsAndGrouping){
+define(["makeRawNode", "appendFromThingsToNode","getAllNodes","getArgs","useArgsAndGrouping","isTemplateNode"],function(makeRawNode, appendFromThingsToNode,getAllNodes,getArgs,useArgsAndGrouping,isTemplateNode){
 	var getNamedNode = function(node){
 		var attr = node.getAttribute('id');
 		if(!attr){return null;}
@@ -102,8 +102,32 @@ define(["makeRawNode", "appendFromThingsToNode","getAllNodes","getArgs","useArgs
 		return namedNodes;
 	};
 
+	var mountFromTemplateNode = function(templateNode){
+		var node = makeRawNode(templateNode.innerHTML);
+		var parent = templateNode.parentElement;
+		parent.appendChild(node);
+		var removed = false;
+		var remove = function(){
+			if(!removed){
+				parent.removeChild(node);
+				removed = true;
+			}
+		};
+		return {
+			node:node,
+			remove:remove
+		};
+	};
+
 	var nodeGrouping = function(html, thisObject){
-		var rawNode = makeRawNode(html);
+		var rawNode;
+		if(isTemplateNode(html)){
+			var mountedTemplate = mountFromTemplateNode(html);
+			rawNode = mountedTemplate.node;
+			this.remove = mountedTemplate.remove;
+		}else{
+			rawNode = makeRawNode(html);
+		}
 		this.groups = groupNamedNodesById(getNamedNodes(rawNode, thisObject));
 		this.rawNode = rawNode;
 	};
