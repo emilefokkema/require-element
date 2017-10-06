@@ -2,7 +2,7 @@ require.config({
 	baseUrl:"../src/"
 });
 
-require(["testSet","require-element"],function(testSet){
+require(["testSet","require-element"],function(testSet, requireElement){
 	testSet = testSet(function(e){console.error(e);}, function(s){console.info(s);});
 	
 	testSet("allTests", function(test){

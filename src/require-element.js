@@ -8,5 +8,5 @@ define(["nodeGrouping", "useArgsAndGrouping", "getArgs"],function(nodeGrouping,u
 		return useArgsAndGrouping(args, grouping, null);
 	};
 
-	window.requireElement = requireElement;
+	return requireElement;
 });
