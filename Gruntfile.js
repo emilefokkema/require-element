@@ -5,7 +5,7 @@ module.exports = function(grunt){
 			compile:{
 				options:{
 					    baseUrl: "src/",
-					    name: "require-element",
+					    name: "main",
 					    out: "dist/require-element.min.js",
 					    onModuleBundleComplete: function (data) {
 						  var fs = module.require('fs'),
@@ -13,7 +13,13 @@ module.exports = function(grunt){
 						    outputFile = data.path,
 						    cleanedCode = amdclean.clean({
 						      'filePath': outputFile
-						    });
+						    }),
+						    wrapPath = outputFile.substr(0, outputFile.indexOf("dist/require-element.min.js")) + "src/wrap.js",
+						  	wrapContent = fs.readFileSync(wrapPath,"UTF-8"),
+						  	where = wrapContent.indexOf("//HERE"),
+						  	wrap1 = wrapContent.substr(0,where),
+						  	wrap2 = wrapContent.substr(where + 6);
+						  cleanedCode = wrap1 + cleanedCode + wrap2;
 
 						  fs.writeFileSync(outputFile, cleanedCode);
 						}

@@ -12,5 +12,5 @@ define(["nodeGrouping", "useArgsAndGrouping", "getArgs"],function(nodeGrouping,u
 		return useArgsAndGrouping(args, grouping, thisObj);
 	};
 
-	window.requireElement = requireElement;
+	return requireElement;
 });
