@@ -105,7 +105,7 @@ define(["makeRawNode", "appendFromThingsToNode","getAllNodes","getArgs","useArgs
 	var mountFromTemplateNode = function(templateNode){
 		var node = makeRawNode(templateNode.innerHTML);
 		var parent = templateNode.parentElement;
-		parent.appendChild(node);
+		parent.insertBefore(node, templateNode);
 		var removed = false;
 		var remove = function(){
 			if(!removed){
